@@ -1,17 +1,16 @@
 #pragma once
 #include "Transform.h"
-#include "SceneObject.h"
 
 namespace dae
 {
 	class Texture2D;
 
 	// todo: this should become final.
-	class GameObject : public SceneObject
+	class GameObject 
 	{
 	public:
-		void Update() override;
-		void Render() const override;
+		virtual void Update();
+		virtual void Render() const;
 
 		void SetTexture(const std::string& filename);
 		void SetPosition(float x, float y);

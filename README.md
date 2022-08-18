@@ -15,4 +15,4 @@ Minigin is, despite its name, not an engine. It is just a very simple sdl2 ready
 
 # Use
 
-Download the latest release of this project and compile/run in visual studio.
+Download the latest release of this project and compile/run in visual studio. Since students need to have their work on github too, they can use this repository as a template.

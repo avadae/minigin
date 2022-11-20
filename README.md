@@ -11,7 +11,7 @@ Minigin can/may be used as a start project for the exam assignment in the course
 
 # Disclaimer
 
-Minigin is, despite its name, not an engine. It is just a very simple sdl2 ready project. But none of the patterns discussed in the course are used (except singleton which use we challenge during the course). It is up to the students to implement their vision for this engine, apply patterns as they see fit, create their game as efficient as possible.
+Minigin is, despite its name, not an engine. It is just a very simple sdl2 ready project. But none of the patterns discussed in the course are used (except singleton which use we challenge during the course). It is up to the students to implement their own vision for their engine, apply patterns as they see fit, create their game as efficient as possible.
 
 # Use
 

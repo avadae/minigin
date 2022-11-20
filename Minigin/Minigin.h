@@ -1,16 +1,19 @@
 #pragma once
-struct SDL_Window;
+#include <string>
+#include <functional>
+
 namespace dae
 {
 	class Minigin
 	{
 	public:
-		void Initialize();
-		void LoadGame() const;
-		void Cleanup();
-		void Run();
-	private:
-		static const int MsPerFrame = 16; //16 for 60 fps, 33 for 30 fps
-		SDL_Window* m_Window{};
+		explicit Minigin(const std::string& dataPath);
+		~Minigin();
+		void Run(const std::function<void()>& load);
+
+		Minigin(const Minigin& other) = delete;
+		Minigin(Minigin&& other) = delete;
+		Minigin& operator=(const Minigin& other) = delete;
+		Minigin& operator=(Minigin&& other) = delete;
 	};
 }

@@ -1,12 +1,12 @@
-#include "MiniginPCH.h"
+#include <stdexcept>
 #include <SDL_ttf.h>
 #include "TextObject.h"
 #include "Renderer.h"
 #include "Font.h"
 #include "Texture2D.h"
 
-dae::TextObject::TextObject(const std::string& text, const std::shared_ptr<Font>& font) 
-	: m_NeedsUpdate(true), m_Text(text), m_Font(font), m_TextTexture(nullptr)
+dae::TextObject::TextObject(const std::string& text, std::shared_ptr<Font> font) 
+	: m_NeedsUpdate(true), m_Text(text), m_Font(std::move(font)), m_TextTexture(nullptr)
 { }
 
 void dae::TextObject::Update()

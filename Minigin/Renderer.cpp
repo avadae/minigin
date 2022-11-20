@@ -1,4 +1,4 @@
-#include "MiniginPCH.h"
+#include <stdexcept>
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
@@ -17,9 +17,8 @@ int GetOpenGLDriverIndex()
 	return openglIndex;
 }
 
-void dae::Renderer::Init(SDL_Window * window)
+void dae::Renderer::Init(SDL_Window* window)
 {
-	m_Window = window;
 	m_Renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (m_Renderer == nullptr) 
 	{
@@ -65,3 +64,5 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	dst.h = static_cast<int>(height);
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
+
+inline SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_Renderer; }

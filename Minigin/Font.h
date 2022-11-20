@@ -1,12 +1,13 @@
 #pragma once
+#include <string>
 
 struct _TTF_Font;
 namespace dae
 {
 	/**
-	 * Simple RAII wrapper for an _TTF_Font
+	 * Simple RAII wrapper for a _TTF_Font
 	 */
-	class Font
+	class Font final
 	{
 	public:
 		_TTF_Font* GetFont() const;

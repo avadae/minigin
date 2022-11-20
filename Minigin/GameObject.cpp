@@ -1,4 +1,4 @@
-#include "MiniginPCH.h"
+#include <string>
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Renderer.h"

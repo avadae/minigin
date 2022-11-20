@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <memory>
 #include "Singleton.h"
 
 namespace dae

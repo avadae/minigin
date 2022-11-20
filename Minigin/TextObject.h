@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <memory>
 #include "GameObject.h"
 #include "Transform.h"
 
@@ -15,7 +17,7 @@ namespace dae
 		void SetText(const std::string& text);
 		void SetPosition(float x, float y);
 
-		explicit TextObject(const std::string& text, const std::shared_ptr<Font>& font);
+		TextObject(const std::string& text, std::shared_ptr<Font> font);
 		virtual ~TextObject() = default;
 		TextObject(const TextObject& other) = delete;
 		TextObject(TextObject&& other) = delete;

@@ -1,4 +1,7 @@
-#include "MiniginPCH.h"
+// https://stackoverflow.com/questions/11040133/what-does-defining-win32-lean-and-mean-exclude-exactly
+#define WIN32_LEAN_AND_MEAN 
+#include <windows.h>
+#include <SDL.h>
 #include "InputManager.h"
 
 bool dae::InputManager::ProcessInput()

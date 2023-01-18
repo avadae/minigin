@@ -24,10 +24,10 @@ namespace dae
 		TextObject& operator=(const TextObject& other) = delete;
 		TextObject& operator=(TextObject&& other) = delete;
 	private:
-		bool m_NeedsUpdate;
-		std::string m_Text;
-		Transform m_Transform{};
-		std::shared_ptr<Font> m_Font;
-		std::shared_ptr<Texture2D> m_TextTexture;
+		bool m_needsUpdate;
+		std::string m_text;
+		Transform m_transform{};
+		std::shared_ptr<Font> m_font;
+		std::shared_ptr<Texture2D> m_textTexture;
 	};
 }

@@ -10,7 +10,8 @@ namespace dae
 	 */
 	class Renderer final : public Singleton<Renderer>
 	{
-		SDL_Renderer* m_Renderer{};
+		SDL_Renderer* m_renderer{};
+		SDL_Window* m_window{};
 		SDL_Color m_clearColor{};	
 	public:
 		void Init(SDL_Window* window);

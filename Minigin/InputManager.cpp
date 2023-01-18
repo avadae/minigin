@@ -6,8 +6,8 @@
 
 bool dae::InputManager::ProcessInput()
 {
-	ZeroMemory(&m_CurrentState, sizeof(XINPUT_STATE));
-	XInputGetState(0, &m_CurrentState);
+	ZeroMemory(&m_currentState, sizeof(XINPUT_STATE));
+	XInputGetState(0, &m_currentState);
 
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
@@ -30,13 +30,13 @@ bool dae::InputManager::IsPressed(ControllerButton button) const
 	switch (button)
 	{
 	case ControllerButton::ButtonA:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_A;
+		return m_currentState.Gamepad.wButtons & XINPUT_GAMEPAD_A;
 	case ControllerButton::ButtonB:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_B;
+		return m_currentState.Gamepad.wButtons & XINPUT_GAMEPAD_B;
 	case ControllerButton::ButtonX:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_X;
+		return m_currentState.Gamepad.wButtons & XINPUT_GAMEPAD_X;
 	case ControllerButton::ButtonY:
-		return m_CurrentState.Gamepad.wButtons & XINPUT_GAMEPAD_Y;
+		return m_currentState.Gamepad.wButtons & XINPUT_GAMEPAD_Y;
 	default: return false;
 	}
 }

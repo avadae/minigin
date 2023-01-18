@@ -3,7 +3,7 @@
 
 void dae::SceneManager::Update()
 {
-	for(auto& scene : m_Scenes)
+	for(auto& scene : m_scenes)
 	{
 		scene->Update();
 	}
@@ -11,7 +11,7 @@ void dae::SceneManager::Update()
 
 void dae::SceneManager::Render()
 {
-	for (const auto& scene : m_Scenes)
+	for (const auto& scene : m_scenes)
 	{
 		scene->Render();
 	}
@@ -20,6 +20,6 @@ void dae::SceneManager::Render()
 dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 {
 	const auto& scene = std::shared_ptr<Scene>(new Scene(name));
-	m_Scenes.push_back(scene);
+	m_scenes.push_back(scene);
 	return *scene;
 }

@@ -398,3 +398,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 !3rdParty/**/*
+
+# Dear Imgui settings file
+imgui.ini

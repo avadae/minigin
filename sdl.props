@@ -12,9 +12,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y</Command>
+      <Command>xcopy "$(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll" "$(OutputPath)" /R /Y
+xcopy "$(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll" "$(OutputPath)" /R /Y
+xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll" "$(OutputPath)" /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup />

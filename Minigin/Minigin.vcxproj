@@ -166,7 +166,6 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -180,7 +179,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_opengl2.h" />
-    <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_sdl.h" />
+    <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.h" />
     <ClInclude Include="..\3rdParty\imgui\imconfig.h" />
     <ClInclude Include="..\3rdParty\imgui\imgui.h" />
     <ClInclude Include="..\3rdParty\imgui\imgui_internal.h" />
@@ -202,7 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_opengl2.cpp" />
-    <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_sdl.cpp" />
+    <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.cpp" />
     <ClCompile Include="..\3rdParty\imgui\imgui.cpp" />
     <ClCompile Include="..\3rdParty\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\3rdParty\imgui\imgui_draw.cpp" />

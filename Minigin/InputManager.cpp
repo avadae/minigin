@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <SDL.h>
 #include "InputManager.h"
-#include <backends/imgui_impl_sdl.h>
+#include <backends/imgui_impl_sdl2.h>
 
 bool dae::InputManager::ProcessInput()
 {

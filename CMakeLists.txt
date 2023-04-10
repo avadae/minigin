@@ -1,27 +1,39 @@
 cmake_minimum_required(VERSION 3.26)
-project(Minigin VERSION 1.0)
+project(Minigin)
 
 # list source files here
-add_executable(minigin 
-    Minigin/Font.cpp
-    Minigin/GameObject.cpp
-    Minigin/InputManager.cpp
-    Minigin/Main.cpp
-    Minigin/Minigin.cpp
-    Minigin/Renderer.cpp
-    Minigin/ResourceManager.cpp
-    Minigin/Scene.cpp
-    Minigin/SceneManager.cpp
-    Minigin/TextObject.cpp
-    Minigin/Texture2D.cpp
-    Minigin/Transform.cpp)
+add_executable(minigin WIN32
+  Minigin/Font.cpp
+  Minigin/Font.h
+  Minigin/GameObject.cpp
+  Minigin/GameObject.h
+  Minigin/InputManager.cpp
+  Minigin/InputManager.h
+  Minigin/Main.cpp
+  Minigin/Minigin.cpp
+  Minigin/Minigin.h
+  Minigin/Renderer.cpp
+  Minigin/Renderer.h
+  Minigin/ResourceManager.cpp
+  Minigin/ResourceManager.h
+  Minigin/Scene.cpp
+  Minigin/Scene.h
+  Minigin/SceneManager.cpp
+  Minigin/SceneManager.h
+  Minigin/TextObject.cpp
+  Minigin/TextObject.h
+  Minigin/Texture2D.cpp
+  Minigin/Texture2D.h
+  Minigin/Transform.cpp
+  Minigin/Transform.h
+)
 
 # enable c++20 features
 target_compile_features(minigin PUBLIC cxx_std_20)
 # compile at warning level 4 + treat warnings as errors
 target_compile_options(minigin PRIVATE /W4 /WX)
 # set minigin as the default startup project
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT minigin)
+set_property(TARGET minigin PROPERTY VS_STARTUP_PROJECT minigin)
 
 include(FetchContent)
 # add glm
@@ -129,4 +141,7 @@ add_custom_command(TARGET minigin POST_BUILD
 )
 add_custom_command(TARGET minigin POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy "${SDL2_TTF_LIBRARY_DLL}" "$<TARGET_FILE_DIR:minigin>"
+)
+add_custom_command(TARGET minigin POST_BUILD
+  COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:minigin>/Data"
 )

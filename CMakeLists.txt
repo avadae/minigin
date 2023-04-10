@@ -33,7 +33,7 @@ target_compile_features(minigin PUBLIC cxx_std_20)
 # compile at warning level 4 + treat warnings as errors
 target_compile_options(minigin PRIVATE /W4 /WX)
 # set minigin as the default startup project
-set_property(TARGET minigin PROPERTY VS_STARTUP_PROJECT minigin)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT minigin)
 
 include(FetchContent)
 # add glm

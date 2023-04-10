@@ -397,7 +397,8 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-!3rdParty/**/*
+#cmake output
+build
 
 # Dear Imgui settings file
 imgui.ini

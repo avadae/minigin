@@ -40,8 +40,8 @@ include(FetchContent)
 FetchContent_Declare(
   glm
   URL https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip
-  DOWNLOAD_NO_PROGRESS ON # Disable progress bar to reduce output clutter
-  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads # Set download directory to avoid cluttering source tree
+  DOWNLOAD_NO_PROGRESS ON
+  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
 )
 
 FetchContent_GetProperties(glm)
@@ -53,9 +53,9 @@ endif()
 # add SDL2
 FetchContent_Declare(
   SDL2
-  URL https://www.libsdl.org/release/SDL2-devel-2.26.3-VC.zip # Replace with the desired version URL
-  DOWNLOAD_NO_PROGRESS ON # Disable progress bar to reduce output clutter
-  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads # Set download directory to avoid cluttering source tree
+  URL https://www.libsdl.org/release/SDL2-devel-2.26.3-VC.zip 
+  DOWNLOAD_NO_PROGRESS ON
+  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads 
 )
 FetchContent_GetProperties(SDL2)
 if(NOT SDL2_POPULATED)
@@ -73,9 +73,9 @@ endif()
 # add SDL2_image
 FetchContent_Declare(
   SDL2_image
-  URL https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.6.3-VC.zip # Replace with the desired version URL
-  DOWNLOAD_NO_PROGRESS ON # Disable progress bar to reduce output clutter
-  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads # Set download directory to avoid cluttering source tree
+  URL https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.6.3-VC.zip 
+  DOWNLOAD_NO_PROGRESS ON
+  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
 )
 FetchContent_GetProperties(SDL2_image)
 if(NOT SDL2_image_POPULATED)
@@ -93,9 +93,9 @@ endif()
 # add SDL2_ttf
 FetchContent_Declare(
   SDL2_ttf
-  URL https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-2.20.2-VC.zip # Replace with the desired version URL
-  DOWNLOAD_NO_PROGRESS ON # Disable progress bar to reduce output clutter
-  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads # Set download directory to avoid cluttering source tree
+  URL https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-2.20.2-VC.zip
+  DOWNLOAD_NO_PROGRESS ON
+  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
 )
 FetchContent_GetProperties(SDL2_ttf)
 if(NOT sdl2_ttf_POPULATED)
@@ -116,21 +116,25 @@ IF(EXISTS ${VLD_DIR})
   if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
       set(VLD_LIBRARY "${VLD_DIR}/lib/Win64/vld.lib")
   else()
-      set(VLD_LIBRARY "${VLD_DIR}/lib/Win86/vld.lib")
+      set(VLD_LIBRARY "${VLD_DIR}/lib/Win32/vld.lib")
   endif()
 endif()
 
 # set all include directories
 target_include_directories(minigin PRIVATE
-    ${CMAKE_SOURCE_DIR}/Minigin/
-    ${VLD_INCLUDE_DIR}
-    ${GLM_INCLUDE_DIR}
-    ${SDL2_INCLUDE_DIR} 
-    ${SDL2_IMAGE_INCLUDE_DIR} 
-    ${SDL2_TTF_INCLUDE_DIR})
+  ${CMAKE_SOURCE_DIR}/Minigin/
+  ${VLD_INCLUDE_DIR}
+  ${GLM_INCLUDE_DIR}
+  ${SDL2_INCLUDE_DIR} 
+  ${SDL2_IMAGE_INCLUDE_DIR} 
+  ${SDL2_TTF_INCLUDE_DIR})
 
 # set libraries to link with
-target_link_libraries(minigin ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${VLD_LIBRARY})
+target_link_libraries(minigin 
+  ${SDL2_LIBRARIES} 
+  ${SDL2_IMAGE_LIBRARIES} 
+  ${SDL2_TTF_LIBRARIES} 
+  ${VLD_LIBRARY})
 
 # add post build commands
 add_custom_command(TARGET minigin POST_BUILD

@@ -75,10 +75,10 @@
     <ClInclude Include="..\3rdParty\imgui\imstb_truetype.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_opengl2.h">
+    <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.h">
+    <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_opengl3.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
   </ItemGroup>
@@ -134,10 +134,10 @@
     <ClCompile Include="..\3rdParty\imgui\imgui_widgets.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_opengl2.cpp">
+    <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.cpp">
+    <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_opengl3.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
   </ItemGroup>

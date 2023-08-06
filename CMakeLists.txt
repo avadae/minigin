@@ -1,8 +1,24 @@
 cmake_minimum_required(VERSION 3.26)
 project(Minigin)
 
+if(EMSCRIPTEN)
+  message("Using Emscripten!")
+else()
+  message("Not using Emscripten!")
+endif()
+
+if(EMSCRIPTEN)
+  set(TARGET_NAME minigin_web)
+  set(TARGET_PARAM )
+else()
+  set(TARGET_NAME minigin)
+  set(TARGET_PARAM WIN32)
+endif()
+
+message(${TARGET_NAME})
+
 # list source files here
-add_executable(minigin WIN32
+add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/Font.cpp
   Minigin/Font.h
   Minigin/GameObject.cpp
@@ -29,11 +45,9 @@ add_executable(minigin WIN32
 )
 
 # enable c++20 features
-target_compile_features(minigin PUBLIC cxx_std_20)
-# compile at warning level 4 + treat warnings as errors
-target_compile_options(minigin PRIVATE /W4 /WX)
+target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
 # set minigin as the default startup project
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT minigin)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
 
 include(FetchContent)
 # add glm
@@ -51,6 +65,8 @@ if(NOT glm_POPULATED)
 endif()
 
 # add SDL2
+
+if (WIN32)
 FetchContent_Declare(
   SDL2
   URL https://www.libsdl.org/release/SDL2-devel-2.26.3-VC.zip 
@@ -119,9 +135,13 @@ IF(EXISTS ${VLD_DIR})
       set(VLD_LIBRARY "${VLD_DIR}/lib/Win32/vld.lib")
   endif()
 endif()
+else()
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
+endif()
+
 
 # set all include directories
-target_include_directories(minigin PRIVATE
+target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${VLD_INCLUDE_DIR}
   ${GLM_INCLUDE_DIR}
@@ -130,22 +150,47 @@ target_include_directories(minigin PRIVATE
   ${SDL2_TTF_INCLUDE_DIR})
 
 # set libraries to link with
-target_link_libraries(minigin 
+target_link_libraries(${TARGET_NAME} 
   ${SDL2_LIBRARIES} 
   ${SDL2_IMAGE_LIBRARIES} 
   ${SDL2_TTF_LIBRARIES} 
   ${VLD_LIBRARY})
 
-# add post build commands
-add_custom_command(TARGET minigin POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy "${SDL2_LIBRARY_DLL}" "$<TARGET_FILE_DIR:minigin>"
-)
-add_custom_command(TARGET minigin POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy "${SDL2_IMAGE_LIBRARY_DLL}" "$<TARGET_FILE_DIR:minigin>"
-)
-add_custom_command(TARGET minigin POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy "${SDL2_TTF_LIBRARY_DLL}" "$<TARGET_FILE_DIR:minigin>"
-)
-add_custom_command(TARGET minigin POST_BUILD
-  COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:minigin>/Data"
-)
+
+if(EMSCRIPTEN)
+  set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")
+  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")
+
+  include(CMakePrintHelpers)  # Optional: For debugging
+
+  # Use the Emscripten toolchain
+  set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/EmscriptenToolchain.cmake)
+
+  # Additional settings for Emscripten build
+  set_target_properties(${TARGET_NAME} PROPERTIES
+      COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"
+      LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS}"
+  )
+
+  cmake_print_variables(EMSCRIPTEN_COMPILE_FLAGS)
+  cmake_print_variables(EMSCRIPTEN_LINK_FLAGS)
+
+  set(CMAKE_EXECUTABLE_SUFFIX ".html")
+else()
+  # compile at warning level 4 + treat warnings as errors
+  target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
+
+  # add post build commands
+  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+      COMMAND "${CMAKE_COMMAND}" -E copy "${SDL2_LIBRARY_DLL}" "$<TARGET_FILE_DIR:${TARGET_NAME}>"
+  )
+  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+      COMMAND "${CMAKE_COMMAND}" -E copy "${SDL2_IMAGE_LIBRARY_DLL}" "$<TARGET_FILE_DIR:${TARGET_NAME}>"
+  )
+  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+      COMMAND "${CMAKE_COMMAND}" -E copy "${SDL2_TTF_LIBRARY_DLL}" "$<TARGET_FILE_DIR:${TARGET_NAME}>"
+  )
+  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Data"
+  )
+endif()

@@ -1,6 +1,12 @@
 #include <stdexcept>
+#include <sstream>
+#include <iostream>
+
+#if WIN32
 #define WIN32_LEAN_AND_MEAN 
 #include <windows.h>
+#endif
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -14,10 +20,24 @@ SDL_Window* g_window{};
 
 void LogSDLVersion(const std::string& message, const SDL_version& v)
 {
+#if WIN32
 	std::stringstream ss;
-	ss << message << (int)v.major << "." << (int)v.minor << "." << (int)v.patch << "\n";
+	ss << message << (int)v.major << "." << v.minor << "." << (int)v.patch << "\n";
 	OutputDebugString(ss.str().c_str());
+#else
+	std::cout << message << (int)v.major << "." << v.minor << "." << (int)v.patch << "\n";
+#endif
 }
+
+#ifdef __EMSCRIPTEN__
+#include "emscripten.h"
+
+void LoopCallback(void* arg)
+{
+	static_cast<dae::Minigin*>(arg)->RunOneFrame();
+}
+#endif
+
 
 // Why bother with this? Because sometimes students have a different SDL version installed on their pc
 // That is not a problem unless for some reason the dll's from this project are not copied next to the exe.
@@ -66,6 +86,10 @@ dae::Minigin::Minigin(const std::filesystem::path &dataPath)
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
 
+#ifdef __EMSCRIPTEN__
+	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
+#endif
+
 	Renderer::GetInstance().Init(g_window);
 
 	ResourceManager::GetInstance().Init(dataPath);
@@ -82,17 +106,15 @@ dae::Minigin::~Minigin()
 void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
+#ifndef __EMSCRIPTEN__
+	while (!m_quit)
+		RunOneFrame();
+#endif
+}
 
-	auto& renderer = Renderer::GetInstance();
-	auto& sceneManager = SceneManager::GetInstance();
-	auto& input = InputManager::GetInstance();
-
-	// todo: this update loop could use some work.
-	bool doContinue = true;
-	while (doContinue)
-	{
-		doContinue = input.ProcessInput();
-		sceneManager.Update();
-		renderer.Render();
-	}
+void dae::Minigin::RunOneFrame()
+{
+	m_quit = !InputManager::GetInstance().ProcessInput();
+	SceneManager::GetInstance().Update();
+	Renderer::GetInstance().Render();
 }

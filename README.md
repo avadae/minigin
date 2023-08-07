@@ -15,4 +15,39 @@ Minigin is, despite perhaps the suggestion in its name, not a game engine. It is
 
 # Use
 
-Download the latest release of this project and compile/run in visual studio. Since students need to have their work on github too, they can use this repository as a template.
+Get the source from this project, or since students need to have their work on github too, they can use this repository as a template.
+
+## Windows version
+
+- Install CMake 
+- Install CMake and CMake Tools extensions in Visual Code
+- Open the root folder in Visual Code, a "build" folder will be made by Code and the project can now be build.
+
+## Emscripten version
+
+- Install CMake 
+- Install Emscripten
+- Install Ninja
+- Install python
+
+In a terminal, navigate to the root folder. Run this: 
+
+    mkdir build_web
+    cd build_web
+    emcmake cmake ..
+    emmake make
+
+To be able to see the webpage you can simply start a python webserver in the build_web folder
+
+    python -m http.server
+
+Then simply browse to http://localhost:8000 and you're good to go.
+
+## Chocolatey
+
+For installing all of the above I recommend using [Chocolatey](https://chocolatey.org/). You can then simply run the following to install what is needed:
+
+    choco install -y cmake
+    choco install -y emscripten
+    choco install -y ninja
+    choco install -y python

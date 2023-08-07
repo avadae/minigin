@@ -61,7 +61,6 @@ if(NOT glm_POPULATED)
 endif()
 
 # add SDL2
-
 if (WIN32)
   FetchContent_Declare(
     SDL2
@@ -120,17 +119,17 @@ if (WIN32)
     set(SDL2_TTF_LIBRARIES ${sdl2_ttf_SOURCE_DIR}/lib/x86/SDL2_ttf.lib)
     set(SDL2_TTF_LIBRARY_DLL "${sdl2_ttf_SOURCE_DIR}/lib/x86/SDL2_ttf.dll")
   endif()
-endif()
-
-set(VLD_DIR "$ENV{ProgramFiles\(x86\)}/Visual Leak Detector")
-IF(EXISTS ${VLD_DIR})
-  set(VLD_INCLUDE_DIR "${VLD_DIR}/include")
-  if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
-      set(VLD_LIBRARY "${VLD_DIR}/lib/Win64/vld.lib")
-  else()
-      set(VLD_LIBRARY "${VLD_DIR}/lib/Win32/vld.lib")
   endif()
-endif()
+
+  set(VLD_DIR "$ENV{ProgramFiles\(x86\)}/Visual Leak Detector")
+  IF(EXISTS ${VLD_DIR})
+    set(VLD_INCLUDE_DIR "${VLD_DIR}/include")
+    if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
+        set(VLD_LIBRARY "${VLD_DIR}/lib/Win64/vld.lib")
+    else()
+        set(VLD_LIBRARY "${VLD_DIR}/lib/Win32/vld.lib")
+    endif()
+  endif()
 else()
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 endif()

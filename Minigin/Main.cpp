@@ -36,9 +36,13 @@ void load()
 }
 
 int main(int, char*[]) {
+#if __EMSCRIPTEN__
+	fs::path data_location = "";
+#else
 	fs::path data_location = "./Data/";
 	if(!fs::exists(data_location))
 		data_location = "../Data/";
+#endif
 	dae::Minigin engine(data_location);
 	engine.Run(load);
     return 0;

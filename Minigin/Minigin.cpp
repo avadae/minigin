@@ -22,10 +22,10 @@ void LogSDLVersion(const std::string& message, const SDL_version& v)
 {
 #if WIN32
 	std::stringstream ss;
-	ss << message << (int)v.major << "." << v.minor << "." << (int)v.patch << "\n";
+	ss << message << (int)v.major << "." << (int)v.minor << "." << (int)v.patch << "\n";
 	OutputDebugString(ss.str().c_str());
 #else
-	std::cout << message << (int)v.major << "." << v.minor << "." << (int)v.patch << "\n";
+	std::cout << message << (int)v.major << "." << (int)v.minor << "." << (int)v.patch << "\n";
 #endif
 }
 
@@ -39,7 +39,7 @@ void LoopCallback(void* arg)
 #endif
 
 
-// Why bother with this? Because sometimes students have a different SDL version installed on their pc
+// Why bother with this? Because sometimes students have a different SDL version installed on their pc.
 // That is not a problem unless for some reason the dll's from this project are not copied next to the exe.
 // These entries in the debug output help to identify that issue.
 void PrintSDLVersion()
@@ -86,12 +86,7 @@ dae::Minigin::Minigin(const std::filesystem::path &dataPath)
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
 
-#ifdef __EMSCRIPTEN__
-	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
-#endif
-
 	Renderer::GetInstance().Init(g_window);
-
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
@@ -109,6 +104,8 @@ void dae::Minigin::Run(const std::function<void()>& load)
 #ifndef __EMSCRIPTEN__
 	while (!m_quit)
 		RunOneFrame();
+#else
+	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
 #endif
 }
 

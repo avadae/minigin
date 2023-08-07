@@ -3,8 +3,6 @@ project(Minigin)
 
 if(EMSCRIPTEN)
   message("Using Emscripten!")
-else()
-  message("Not using Emscripten!")
 endif()
 
 if(EMSCRIPTEN)
@@ -14,8 +12,6 @@ else()
   set(TARGET_NAME minigin)
   set(TARGET_PARAM WIN32)
 endif()
-
-message(${TARGET_NAME})
 
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
@@ -158,10 +154,8 @@ target_link_libraries(${TARGET_NAME}
 
 
 if(EMSCRIPTEN)
-  set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")
-  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")
-
-  include(CMakePrintHelpers)  # Optional: For debugging
+  set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g -sNO_DISABLE_EXCEPTION_CATCHING")
+  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\" -sSDL2_IMAGE_FORMATS='tga'")
 
   # Use the Emscripten toolchain
   set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/EmscriptenToolchain.cmake)
@@ -171,9 +165,6 @@ if(EMSCRIPTEN)
       COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"
       LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS}"
   )
-
-  cmake_print_variables(EMSCRIPTEN_COMPILE_FLAGS)
-  cmake_print_variables(EMSCRIPTEN_LINK_FLAGS)
 
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
 else()

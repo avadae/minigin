@@ -35,7 +35,7 @@ In a terminal, navigate to the root folder. Run this:
     mkdir build_web
     cd build_web
     emcmake cmake ..
-    emmake make
+    emmake ninja
 
 To be able to see the webpage you can simply start a python webserver in the build_web folder
 

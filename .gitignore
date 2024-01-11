@@ -399,5 +399,9 @@ FodyWeavers.xsd
 
 !3rdParty/**/*
 
+#cmake output
+build
+build_web
+
 # Dear Imgui settings file
 imgui.ini

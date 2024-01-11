@@ -64,7 +64,7 @@ endif()
 if (WIN32)
   FetchContent_Declare(
     SDL2
-    URL https://www.libsdl.org/release/SDL2-devel-2.26.3-VC.zip 
+    URL https://www.libsdl.org/release/SDL2-devel-2.28.5-VC.zip 
     DOWNLOAD_NO_PROGRESS ON
     DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads 
   )
@@ -84,7 +84,7 @@ if (WIN32)
   # add SDL2_image
   FetchContent_Declare(
     SDL2_image
-    URL https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.6.3-VC.zip 
+    URL https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.8.2-VC.zip 
     DOWNLOAD_NO_PROGRESS ON
     DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
   )

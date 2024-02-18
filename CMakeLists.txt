@@ -152,7 +152,10 @@ elseif(NOT EMSCRIPTEN)
   find_package(SDL2_image REQUIRED)
   find_package(SDL2_ttf REQUIRED)
 
-  # modern CMake: include dirs are added for us
+  include_directories(${SDL2_INCLUDE_DIRS})
+  include_directories(${SDL2_image_INCLUDE_DIRS})
+  include_directories(${SDL2_ttf_INCLUDE_DIRS})
+
   target_link_libraries(${TARGET_NAME} PUBLIC SDL2::Main SDL2::Image SDL2::TTF)
 endif()
 

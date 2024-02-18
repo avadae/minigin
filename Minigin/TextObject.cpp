@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 #include "TextObject.h"
 #include "Renderer.h"
 #include "Font.h"

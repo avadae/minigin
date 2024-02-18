@@ -57,7 +57,6 @@ FetchContent_Declare(
 FetchContent_GetProperties(glm)
 if(NOT glm_POPULATED)
   FetchContent_Populate(glm)
-  set(GLM_INCLUDE_DIR "${glm_SOURCE_DIR}")
 endif()
 
 # add SDL2
@@ -130,31 +129,50 @@ if (WIN32)
         set(VLD_LIBRARY "${VLD_DIR}/lib/Win32/vld.lib")
     endif()
   endif()
-else()
+
+  # set all include directories
+  target_include_directories(${TARGET_NAME} PRIVATE
+    ${VLD_INCLUDE_DIR}
+    ${SDL2_INCLUDE_DIR} 
+    ${SDL2_IMAGE_INCLUDE_DIR} 
+    ${SDL2_TTF_INCLUDE_DIR})
+  
+  # set libraries to link with
+  target_link_libraries(${TARGET_NAME} PUBLIC
+    ${SDL2_LIBRARIES} 
+    ${SDL2_IMAGE_LIBRARIES} 
+    ${SDL2_TTF_LIBRARIES} 
+    ${VLD_LIBRARY}
+  )
+
+elseif(NOT EMSCRIPTEN)
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
+
+  find_package(SDL2 REQUIRED)
+  find_package(SDL2_image REQUIRED)
+  find_package(SDL2_ttf REQUIRED)
+
+  # modern CMake: include dirs are added for us
+  target_link_libraries(${TARGET_NAME} PUBLIC SDL2::Main SDL2::Image SDL2::TTF)
 endif()
 
-
-# set all include directories
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Minigin/
-  ${VLD_INCLUDE_DIR}
-  ${GLM_INCLUDE_DIR}
-  ${SDL2_INCLUDE_DIR} 
-  ${SDL2_IMAGE_INCLUDE_DIR} 
-  ${SDL2_TTF_INCLUDE_DIR})
+  ${glm_SOURCE_DIR}
+)
 
-# set libraries to link with
-target_link_libraries(${TARGET_NAME} 
-  ${SDL2_LIBRARIES} 
-  ${SDL2_IMAGE_LIBRARIES} 
-  ${SDL2_TTF_LIBRARIES} 
-  ${VLD_LIBRARY})
-
+# compile at max warning level + treat warnings as errors
+target_compile_options(${TARGET_NAME} PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
 
 if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")
   set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\" -sSDL2_IMAGE_FORMATS=['tga','png']")
+
+  # work around https://github.com/emscripten-core/emscripten/issues/11513
+  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -fno-stack-protector")
 
   # Use the Emscripten toolchain
   set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/EmscriptenToolchain.cmake)
@@ -168,9 +186,7 @@ if(EMSCRIPTEN)
   # Have emscripten generate a html page too.
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
   
-else()
-  # compile at warning level 4 + treat warnings as errors
-  target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
+elseif(WIN32)
 
   # add post build commands
   add_custom_command(TARGET ${TARGET_NAME} POST_BUILD

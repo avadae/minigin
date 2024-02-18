@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include <SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #include "Font.h"
 
 TTF_Font* dae::Font::GetFont() const {

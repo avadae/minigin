@@ -20,6 +20,5 @@ namespace dae
 		Font & operator= (const Font &&) = delete;
 	private:
 		_TTF_Font* m_font;
-		[[maybe_unused]] unsigned int m_size;
 	};
 }

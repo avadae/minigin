@@ -146,17 +146,44 @@ if (WIN32)
   )
 
 elseif(NOT EMSCRIPTEN)
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
-  find_package(SDL2 REQUIRED)
-  find_package(SDL2_image REQUIRED)
-  find_package(SDL2_ttf REQUIRED)
+  FetchContent_Declare(
+    SDL2
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+    GIT_TAG release-2.28.5
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+  )
+  FetchContent_MakeAvailable(SDL2)
+  
+  FetchContent_Declare(
+    SDL2_image
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+    GIT_TAG release-2.8.2
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+  )
+  set(SDL2IMAGE_INSTALL OFF)
+  FetchContent_MakeAvailable(SDL2_image)
 
-  include_directories(${SDL2_INCLUDE_DIRS})
-  include_directories(${SDL2_image_INCLUDE_DIRS})
-  include_directories(${SDL2_ttf_INCLUDE_DIRS})
+  FetchContent_Declare(
+    SDL2_ttf
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
+    GIT_TAG release-2.20.2
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+  )
+  set(SDL2TTF_INSTALL OFF)
+  FetchContent_MakeAvailable(SDL2_ttf)
 
-  target_link_libraries(${TARGET_NAME} PUBLIC SDL2::Main SDL2::Image SDL2::TTF)
+  target_include_directories("${TARGET_NAME}" PUBLIC 
+    ${sdl2_SOURCE_DIR}/include
+    ${sdl2_image_SOURCE_DIR}/include
+    ${sdl2_ttf_SOURCE_DIR}
+  )
+  target_link_libraries("${TARGET_NAME}" PUBLIC 
+    SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf
+  )
 endif()
 
 target_include_directories(${TARGET_NAME} PRIVATE

@@ -57,7 +57,6 @@ FetchContent_Declare(
 FetchContent_GetProperties(glm)
 if(NOT glm_POPULATED)
   FetchContent_Populate(glm)
-  set(GLM_INCLUDE_DIR "${glm_SOURCE_DIR}")
 endif()
 
 # add SDL2
@@ -130,31 +129,80 @@ if (WIN32)
         set(VLD_LIBRARY "${VLD_DIR}/lib/Win32/vld.lib")
     endif()
   endif()
-else()
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
+
+  # set all include directories
+  target_include_directories(${TARGET_NAME} PRIVATE
+    ${VLD_INCLUDE_DIR}
+    ${SDL2_INCLUDE_DIR} 
+    ${SDL2_IMAGE_INCLUDE_DIR} 
+    ${SDL2_TTF_INCLUDE_DIR})
+  
+  # set libraries to link with
+  target_link_libraries(${TARGET_NAME} PUBLIC
+    ${SDL2_LIBRARIES} 
+    ${SDL2_IMAGE_LIBRARIES} 
+    ${SDL2_TTF_LIBRARIES} 
+    ${VLD_LIBRARY}
+  )
+
+elseif(NOT EMSCRIPTEN)
+
+  FetchContent_Declare(
+    SDL2
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+    GIT_TAG release-2.28.5
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+  )
+  FetchContent_MakeAvailable(SDL2)
+  
+  FetchContent_Declare(
+    SDL2_image
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+    GIT_TAG release-2.8.2
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+  )
+  set(SDL2IMAGE_INSTALL OFF)
+  FetchContent_MakeAvailable(SDL2_image)
+
+  FetchContent_Declare(
+    SDL2_ttf
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
+    GIT_TAG release-2.20.2
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+  )
+  set(SDL2TTF_INSTALL OFF)
+  FetchContent_MakeAvailable(SDL2_ttf)
+
+  target_include_directories("${TARGET_NAME}" PUBLIC 
+    ${sdl2_SOURCE_DIR}/include
+    ${sdl2_image_SOURCE_DIR}/include
+    ${sdl2_ttf_SOURCE_DIR}
+  )
+  target_link_libraries("${TARGET_NAME}" PUBLIC 
+    SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf
+  )
 endif()
 
-
-# set all include directories
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Minigin/
-  ${VLD_INCLUDE_DIR}
-  ${GLM_INCLUDE_DIR}
-  ${SDL2_INCLUDE_DIR} 
-  ${SDL2_IMAGE_INCLUDE_DIR} 
-  ${SDL2_TTF_INCLUDE_DIR})
+  ${glm_SOURCE_DIR}
+)
 
-# set libraries to link with
-target_link_libraries(${TARGET_NAME} 
-  ${SDL2_LIBRARIES} 
-  ${SDL2_IMAGE_LIBRARIES} 
-  ${SDL2_TTF_LIBRARIES} 
-  ${VLD_LIBRARY})
-
+# compile at max warning level + treat warnings as errors
+target_compile_options(${TARGET_NAME} PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
 
 if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")
   set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\" -sSDL2_IMAGE_FORMATS=['tga','png']")
+
+  # work around https://github.com/emscripten-core/emscripten/issues/11513
+  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -fno-stack-protector")
 
   # Use the Emscripten toolchain
   set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/EmscriptenToolchain.cmake)
@@ -168,9 +216,7 @@ if(EMSCRIPTEN)
   # Have emscripten generate a html page too.
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
   
-else()
-  # compile at warning level 4 + treat warnings as errors
-  target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
+elseif(WIN32)
 
   # add post build commands
   add_custom_command(TARGET ${TARGET_NAME} POST_BUILD

@@ -13,7 +13,7 @@ void dae::TextObject::Update()
 {
 	if (m_needsUpdate)
 	{
-		const SDL_Color color = { 255,255,255 }; // only white text is supported now
+		const SDL_Color color = { 255,255,255,255 }; // only white text is supported now
 		const auto surf = TTF_RenderText_Blended(m_font->GetFont(), m_text.c_str(), color);
 		if (surf == nullptr) 
 		{

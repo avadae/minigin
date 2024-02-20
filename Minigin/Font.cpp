@@ -6,7 +6,7 @@ TTF_Font* dae::Font::GetFont() const {
 	return m_font;
 }
 
-dae::Font::Font(const std::string& fullPath, unsigned int size) : m_font(nullptr), m_size(size)
+dae::Font::Font(const std::string& fullPath, unsigned int size) : m_font(nullptr)
 {
 	m_font = TTF_OpenFont(fullPath.c_str(), size);
 	if (m_font == nullptr) 

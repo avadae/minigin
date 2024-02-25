@@ -217,6 +217,7 @@ if(EMSCRIPTEN)
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
   
 elseif(WIN32)
+  set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${TARGET_NAME}>")
 
   # add post build commands
   add_custom_command(TARGET ${TARGET_NAME} POST_BUILD

@@ -11,8 +11,8 @@ Minigin can/may be used as a start project for the exam assignment in the course
 
 # Disclaimer
 
-Minigin is, despite perhaps the suggestion in its name, not a game engine. It is just a very simple sdl2 ready project with some of the scaffolding in place to get started. None of the patterns discussed in the course are used yet (except singleton which use we challenge during the course). It is up to the students to implement their own vision for their engine, apply patterns as they see fit, create their game as efficient as possible.
+Minigin is, despite perhaps the suggestion in its name, **not** a game engine. It is just a very simple sdl2 ready project with some of the scaffolding in place to get started. None of the patterns discussed in the course are used yet (except singleton which use we challenge during the course). It is up to the students to implement their own vision for their engine, apply patterns as they see fit, create their game as efficient as possible.
 
 # Use
 
-Download the latest release of this project and compile/run in visual studio. Since students need to have their work on github too, they can use this repository as a template.
+Either download the latest release of this project and compile/run in visual studio. Since students need to have their work on github too, they can use this repository as a template (see the "Use this template" button at the top right corner). There is no point in forking this project.

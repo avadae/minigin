@@ -49,7 +49,7 @@ include(FetchContent)
 # add glm
 FetchContent_Declare(
   glm
-  URL https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip
+  URL https://github.com/g-truc/glm/releases/download/1.0.1/glm-1.0.1-light.zip
   DOWNLOAD_NO_PROGRESS ON
   DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
 )
@@ -63,7 +63,7 @@ endif()
 if (WIN32)
   FetchContent_Declare(
     SDL2
-    URL https://www.libsdl.org/release/SDL2-devel-2.28.5-VC.zip 
+    URL https://www.libsdl.org/release/SDL2-devel-2.30.10-VC.zip 
     DOWNLOAD_NO_PROGRESS ON
     DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads 
   )
@@ -83,7 +83,7 @@ if (WIN32)
   # add SDL2_image
   FetchContent_Declare(
     SDL2_image
-    URL https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.8.2-VC.zip 
+    URL https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.8.3-VC.zip 
     DOWNLOAD_NO_PROGRESS ON
     DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
   )
@@ -103,7 +103,7 @@ if (WIN32)
   # add SDL2_ttf
   FetchContent_Declare(
     SDL2_ttf
-    URL https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-2.20.2-VC.zip
+    URL https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-2.22.0-VC.zip
     DOWNLOAD_NO_PROGRESS ON
     DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
   )
@@ -150,7 +150,7 @@ elseif(NOT EMSCRIPTEN)
   FetchContent_Declare(
     SDL2
     GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-    GIT_TAG release-2.28.5
+    GIT_TAG release-2.30.10
     GIT_SHALLOW TRUE
     GIT_PROGRESS TRUE
   )
@@ -159,7 +159,7 @@ elseif(NOT EMSCRIPTEN)
   FetchContent_Declare(
     SDL2_image
     GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
-    GIT_TAG release-2.8.2
+    GIT_TAG release-2.8.3
     GIT_SHALLOW TRUE
     GIT_PROGRESS TRUE
   )
@@ -169,7 +169,7 @@ elseif(NOT EMSCRIPTEN)
   FetchContent_Declare(
     SDL2_ttf
     GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
-    GIT_TAG release-2.20.2
+    GIT_TAG release-2.22.0
     GIT_SHALLOW TRUE
     GIT_PROGRESS TRUE
   )

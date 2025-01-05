@@ -45,16 +45,13 @@ void dae::ResourceManager::UnloadUnusedResources()
 			it = m_loadedTextures.erase(it);
 		else
 			++it;
-}
+	}
 
 	for (auto it = m_loadedFonts.begin(); it != m_loadedFonts.end();)
-{
-	return std::make_shared<Font>(m_dataPath + file, size);
+	{
 		if (it->second.use_count() == 1)
 			it = m_loadedFonts.erase(it);
 		else
 			++it;
 	}
-	const auto fullPath = m_dataPath/file;
-	return std::make_shared<Font>(fullPath.string(), size);
 }

@@ -1,5 +1,6 @@
-#pragma once
+﻿#pragma once
 #include <vec2.hpp>
+#include <string>
 
 struct SDL_Texture;
 namespace dae
@@ -12,6 +13,7 @@ namespace dae
 	public:
 		SDL_Texture* GetSDLTexture() const;
 		explicit Texture2D(SDL_Texture* texture);
+		explicit Texture2D(const std::string& fullPath);
 		~Texture2D();
 
 		glm::ivec2 GetSize() const;

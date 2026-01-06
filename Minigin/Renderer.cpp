@@ -6,7 +6,13 @@
 void dae::Renderer::Init(SDL_Window* window)
 {
 	m_window = window;
-	m_renderer = SDL_CreateRenderer(window, nullptr);
+
+	// needed for opengl renderer with sdl
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, 1);
+
+	m_renderer = SDL_CreateRenderer(window, "opengl");
 	if (m_renderer == nullptr) 
 	{
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
@@ -21,7 +27,8 @@ void dae::Renderer::Render() const
 
 	SceneManager::GetInstance().Render();
 	
-	SDL_RenderPresent(m_renderer);
+	SDL_FlushRenderer(m_renderer);
+	SDL_GL_SwapWindow(m_window);
 }
 
 void dae::Renderer::Destroy()

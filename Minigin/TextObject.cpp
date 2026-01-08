@@ -5,16 +5,15 @@
 #include "Font.h"
 #include "Texture2D.h"
 
-dae::TextObject::TextObject(const std::string& text, std::shared_ptr<Font> font) 
-	: m_needsUpdate(true), m_text(text), m_font(std::move(font)), m_textTexture(nullptr)
+dae::TextObject::TextObject(const std::string& text, std::shared_ptr<Font> font, const SDL_Color& color)
+	: m_needsUpdate(true), m_text(text), m_font(std::move(font)), m_textTexture(nullptr), m_color(color)
 { }
 
 void dae::TextObject::Update()
 {
 	if (m_needsUpdate)
 	{
-		const SDL_Color color = { 255,255,255,255 }; // only white text is supported now
-		const auto surf = TTF_RenderText_Blended(m_font->GetFont(), m_text.c_str(), color);
+		const auto surf = TTF_RenderText_Blended(m_font->GetFont(), m_text.c_str(), m_color);
 		if (surf == nullptr) 
 		{
 			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
@@ -39,7 +38,6 @@ void dae::TextObject::Render() const
 	}
 }
 
-// This implementation uses the "dirty flag" pattern
 void dae::TextObject::SetText(const std::string& text)
 {
 	m_text = text;
@@ -48,7 +46,13 @@ void dae::TextObject::SetText(const std::string& text)
 
 void dae::TextObject::SetPosition(const float x, const float y)
 {
-	m_transform.SetPosition(x, y, 0.0f);
+	m_transform.SetPosition(x, y);
+}
+
+void dae::TextObject::SetColor(const SDL_Color& color) 
+{ 
+	m_color = color; 
+	m_needsUpdate = true; 
 }
 
 

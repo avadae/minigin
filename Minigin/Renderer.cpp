@@ -3,7 +3,7 @@
 #include "SceneManager.h"
 #include "Texture2D.h"
 
-int GetOpenGLDriverIndex()
+static int GetOpenGLDriverIndex()
 {
 	auto openglIndex = -1;
 	const auto driverCount = SDL_GetNumRenderDrivers();

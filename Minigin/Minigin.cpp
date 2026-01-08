@@ -12,7 +12,7 @@
 
 SDL_Window* g_window{};
 
-void PrintSDLVersion()
+static void PrintSDLVersion()
 {
 	SDL_version version{};
 	SDL_VERSION(&version);

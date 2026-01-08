@@ -1,26 +1,18 @@
-#include <stdexcept>
+﻿#include <stdexcept>
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
 
-static int GetOpenGLDriverIndex()
-{
-	auto openglIndex = -1;
-	const auto driverCount = SDL_GetNumRenderDrivers();
-	for (auto i = 0; i < driverCount; i++)
-	{
-		SDL_RendererInfo info;
-		if (!SDL_GetRenderDriverInfo(i, &info))
-			if (!strcmp(info.name, "opengl"))
-				openglIndex = i;
-	}
-	return openglIndex;
-}
-
 void dae::Renderer::Init(SDL_Window* window)
 {
 	m_window = window;
-	m_renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED);
+
+	// needed for opengl renderer with sdl
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, 1);
+
+	m_renderer = SDL_CreateRenderer(window, "opengl");
 	if (m_renderer == nullptr) 
 	{
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
@@ -35,7 +27,8 @@ void dae::Renderer::Render() const
 
 	SceneManager::GetInstance().Render();
 	
-	SDL_RenderPresent(m_renderer);
+	SDL_FlushRenderer(m_renderer);
+	SDL_GL_SwapWindow(m_window);
 }
 
 void dae::Renderer::Destroy()
@@ -49,21 +42,21 @@ void dae::Renderer::Destroy()
 
 void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
-	SDL_Rect dst{};
-	dst.x = static_cast<int>(x);
-	dst.y = static_cast<int>(y);
-	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	SDL_FRect dst{};
+	dst.x = x;
+	dst.y = y;
+	SDL_GetTextureSize(texture.GetSDLTexture(), &dst.w, &dst.h);
+	SDL_RenderTexture(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
 void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
 {
-	SDL_Rect dst{};
-	dst.x = static_cast<int>(x);
-	dst.y = static_cast<int>(y);
-	dst.w = static_cast<int>(width);
-	dst.h = static_cast<int>(height);
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	SDL_FRect dst{};
+	dst.x = x;
+	dst.y = y;
+	dst.w = width;
+	dst.h = height;
+	SDL_RenderTexture(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_renderer; }

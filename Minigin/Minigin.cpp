@@ -1,9 +1,9 @@
 #include <stdexcept>
 #define WIN32_LEAN_AND_MEAN 
 #include <windows.h>
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include "Minigin.h"
 #include "InputManager.h"
 #include "SceneManager.h"
@@ -14,45 +14,53 @@ SDL_Window* g_window{};
 
 static void PrintSDLVersion()
 {
-	SDL_version version{};
-	SDL_VERSION(&version);
-	printf("We compiled against SDL version %u.%u.%u ...\n",
-		version.major, version.minor, version.patch);
+	printf("Compiled with SDL %d.%d.%d\n",
+		SDL_MAJOR_VERSION,
+		SDL_MINOR_VERSION,
+		SDL_MICRO_VERSION);
 
-	SDL_GetVersion(&version);
-	printf("We are linking against SDL version %u.%u.%u.\n",
-		version.major, version.minor, version.patch);
+	int version = SDL_GetVersion();
+	printf("Linked with SDL %d.%d.%d\n",
+		SDL_VERSIONNUM_MAJOR(version),
+		SDL_VERSIONNUM_MINOR(version),
+		SDL_VERSIONNUM_MICRO(version));
 
-	SDL_IMAGE_VERSION(&version);
-	printf("We compiled against SDL_image version %u.%u.%u ...\n",
-		version.major, version.minor, version.patch);
+	printf("Compiled with SDL_image %u.%u.%u\n",
+		SDL_IMAGE_MAJOR_VERSION,
+		SDL_IMAGE_MINOR_VERSION,
+		SDL_IMAGE_MICRO_VERSION);
 
-	version = *IMG_Linked_Version();
-	printf("We are linking against SDL_image version %u.%u.%u.\n",
-		version.major, version.minor, version.patch);
+	version = IMG_Version();
+	printf("Linked with SDL_image %d.%d.%d\n",
+		SDL_VERSIONNUM_MAJOR(version),
+		SDL_VERSIONNUM_MINOR(version),
+		SDL_VERSIONNUM_MICRO(version));
 
-	SDL_TTF_VERSION(&version)
-	printf("We compiled against SDL_ttf version %u.%u.%u ...\n",
-		version.major, version.minor, version.patch);
+	printf("Compiled with SDL_ttf %u.%u.%u\n",
+		SDL_TTF_MAJOR_VERSION,
+		SDL_TTF_MINOR_VERSION,
+		SDL_TTF_MICRO_VERSION);
 
-	version = *TTF_Linked_Version();
-	printf("We are linking against SDL_ttf version %u.%u.%u.\n",
-		version.major, version.minor, version.patch);
+	version = TTF_Version();
+	printf("Linked with SDL_ttf %d.%d.%d\n",
+		SDL_VERSIONNUM_MAJOR(version),
+		SDL_VERSIONNUM_MINOR(version),
+		SDL_VERSIONNUM_MICRO(version));
+
 }
 
 dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 {
 	PrintSDLVersion();
 	
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
+	if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
 	{
+		SDL_Log("Renderer error: %s", SDL_GetError());
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
 
 	g_window = SDL_CreateWindow(
 		"Programming 4 assignment",
-		SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED,
 		640,
 		480,
 		SDL_WINDOW_OPENGL

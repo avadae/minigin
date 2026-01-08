@@ -1,4 +1,5 @@
-#include <SDL.h>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
 
 #if _DEBUG
 // ReSharper disable once CppUnusedIncludeDirective
@@ -16,23 +17,24 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-void load()
+static void load()
 {
-	auto& scene = dae::SceneManager::GetInstance().CreateScene("Demo");
+	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
-	auto go = std::make_shared<dae::GameObject>();
+	auto go = std::make_unique<dae::GameObject>();
 	go->SetTexture("background.tga");
-	scene.Add(go);
+	scene.Add(std::move(go));
 
-	go = std::make_shared<dae::GameObject>();
+	go = std::make_unique<dae::GameObject>();
 	go->SetTexture("logo.tga");
 	go->SetPosition(216, 180);
-	scene.Add(go);
+	scene.Add(std::move(go));
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<dae::TextObject>("Programming 4 Assignment", font);
+	auto to = std::make_unique<dae::TextObject>("Programming 4 Assignment", font);
+	to->SetColor({ 255, 255, 0, 255 });
 	to->SetPosition(80, 20);
-	scene.Add(to);
+	scene.Add(std::move(to));
 }
 
 int main(int, char*[]) {

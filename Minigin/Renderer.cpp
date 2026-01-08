@@ -1,5 +1,6 @@
 ﻿#include <stdexcept>
 #include <cstring>
+#include <iostream>
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
@@ -8,14 +9,20 @@ void dae::Renderer::Init(SDL_Window* window)
 {
 	m_window = window;
 
-	// needed for opengl renderer with sdl
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, 1);
+	SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
 
+#if defined(__EMSCRIPTEN__)
+	m_renderer = SDL_CreateRenderer(window, "opengles2");
+#else
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, 1);
 	m_renderer = SDL_CreateRenderer(window, "opengl");
+#endif
+
 	if (m_renderer == nullptr) 
 	{
+		std::cout << "Failed to create the renderer: " << SDL_GetError() << "\n";
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 	}
 }

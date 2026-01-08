@@ -103,7 +103,7 @@ if (WIN32)
   # add SDL3_ttf
   FetchContent_Declare(
     SDL3_ttf
-    URL https://www.libsdl.org/projects/SDL_ttf/release/SDL3_ttf-devel-3.1.0-VC.zip
+    URL https://www.libsdl.org/projects/SDL_ttf/release/SDL3_ttf-devel-3.2.2-VC.zip
     DOWNLOAD_NO_PROGRESS ON
     DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
   )
@@ -137,7 +137,7 @@ if (WIN32)
     ${VLD_LIBRARY}
   )
 
-elseif(NOT EMSCRIPTEN)
+else()
 
   FetchContent_Declare(
     SDL3
@@ -161,7 +161,7 @@ elseif(NOT EMSCRIPTEN)
   FetchContent_Declare(
     SDL3_ttf
     GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
-    GIT_TAG release-3.1.0
+    GIT_TAG release-3.2.2
     GIT_SHALLOW TRUE
     GIT_PROGRESS TRUE
   )
@@ -190,8 +190,8 @@ target_compile_options(${TARGET_NAME} PRIVATE
 )
 
 if(EMSCRIPTEN)
-  set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=3 -sUSE_SDL_IMAGE=3 -sUSE_SDL_TTF=3 -g")
-  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=3 -sUSE_SDL_IMAGE=3 -sUSE_SDL_TTF=3 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\" -sSDL3_IMAGE_FORMATS=['tga','png']")
+  set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -g -sNO_DISABLE_EXCEPTION_CATCHING")
+  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\"")
 
   # work around https://github.com/emscripten-core/emscripten/issues/11513
   set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -fno-stack-protector")

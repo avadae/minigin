@@ -50,6 +50,12 @@ To be able to see the webpage you can simply start a python webserver in the bui
 
 Then simply browse to http://localhost:8000 and you're good to go.
 
+## Github Actions
+
+This project is build with github actions.
+- The CMake workflow simply builds the project in Debug and Release for Windows and serves as a check that the project builds on that platform.
+- The Emscripten workflow generates a web version of the project and publishes it as a [github page](https://<username>.github.io/<repository>/).
+
 ## Chocolatey
 
 For installing all of the above I recommend using [Chocolatey](https://chocolatey.org/). You can then simply run the following to install what is needed:

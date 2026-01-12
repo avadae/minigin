@@ -59,7 +59,7 @@ This project is build with github actions.
 
 ## Chocolatey
 
-For installing all of the above I recommend using [Chocolatey](https://chocolatey.org/). You can then simply run the following to install what is needed:
+For installing all of the above on Windows I recommend using [Chocolatey](https://chocolatey.org/). You can then simply run the following to install what is needed:
 
     choco install -y cmake
     choco install -y emscripten

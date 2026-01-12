@@ -49,7 +49,7 @@ include(FetchContent)
 # add glm
 FetchContent_Declare(
   glm
-  URL https://github.com/g-truc/glm/releases/download/1.0.1/glm-1.0.1-light.zip
+  URL https://github.com/g-truc/glm/releases/download/1.0.3/glm-1.0.3.zip
   DOWNLOAD_NO_PROGRESS ON
   DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
 )

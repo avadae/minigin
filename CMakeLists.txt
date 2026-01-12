@@ -134,7 +134,7 @@ else()
   set(SDL3TTF_INSTALL OFF)
   if(EMSCRIPTEN)
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/emscripten")
-    set(SDL3TTF_USE_SYSTEM_FREETYPE OFF)
+    set(SDL3TTF_USE_SYSTEM_FREETYPE ON)
     set(SDL3TTF_VENDORED OFF)
     set(SDLTTF_PLUTOSVG OFF)
     add_compile_options(-sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1)
@@ -169,7 +169,6 @@ endif()
 
 if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -g")
-  MESSAGE("Link flags: ${EMSCRIPTEN_LINK_FLAGS}")
   set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\"")
 
   # work around https://github.com/emscripten-core/emscripten/issues/11513

@@ -15,7 +15,7 @@ Minigin is, despite perhaps the suggestion in its name, **not** a game engine. I
 
 # Use
 
-Get the source from this project, or since students need to have their work on github too, they can use this repository as a template.
+Get the source from this project, or since students need to have their work on github too, they can use this repository as a template. Hit the "Use this template" button on the top right corner of the github page of this project.
 
 ## Windows version
 

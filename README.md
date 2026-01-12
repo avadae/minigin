@@ -1,6 +1,6 @@
 ﻿# Minigin
 
-Minigin is a very small project using [SDL2](https://www.libsdl.org/) and [glm](https://github.com/g-truc/glm) for 2D c++ game projects. It is in no way a game engine, only a barebone start project where everything sdl related has been set up. It contains glm for vector math, to aleviate the need to write custom vector and matrix classes.
+Minigin is a very small project using [SDL3](https://www.libsdl.org/) and [glm](https://github.com/g-truc/glm) for 2D c++ game projects. It is in no way a game engine, only a barebone start project where everything sdl related has been set up. It contains glm for vector math, to aleviate the need to write custom vector and matrix classes.
 
 [![Build Status](https://github.com/avadae/minigin/actions/workflows/cmake.yml/badge.svg)](https://github.com/avadae/cmake/actions)
 [![GitHub Release](https://img.shields.io/github/v/release/avadae/minigin?logo=github&sort=semver)](https://github.com/avadae/minigin/releases/latest)
@@ -19,11 +19,18 @@ Get the source from this project, or since students need to have their work on g
 
 ## Windows version
 
+Either
+- Open the root folder in Visual Studio 2026; this will be recognized as a cmake project.
+  
+Or
 - Install CMake 
 - Install CMake and CMake Tools extensions in Visual Code
-- Open the root folder in Visual Code, a "build" folder will be made by Code and the project can now be build.
+- Open the root folder in Visual Code,  this will be recognized as a cmake project.
 
-## Emscripten version
+Or
+- Use whatever editor you like :)
+
+## Emscripten (web) version
 
 - Install CMake 
 - Install Emscripten

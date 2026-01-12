@@ -27,13 +27,13 @@ static void load()
 
 	go = std::make_unique<dae::GameObject>();
 	go->SetTexture("logo.tga");
-	go->SetPosition(216, 180);
+	go->SetPosition(438, 180);
 	scene.Add(std::move(go));
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_unique<dae::TextObject>("Programming 4 Assignment", font);
 	to->SetColor({ 255, 255, 0, 255 });
-	to->SetPosition(80, 20);
+	to->SetPosition(292, 20);
 	scene.Add(std::move(to));
 }
 

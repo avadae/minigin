@@ -1,4 +1,4 @@
-name: Emscripten Web Build
+name: Emscripten
 
 on:
   workflow_dispatch:

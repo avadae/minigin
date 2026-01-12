@@ -397,8 +397,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-!3rdParty/**/*
-
 #cmake output
 build
 build_web

@@ -1,0 +1,212 @@
+cmake_minimum_required(VERSION 3.26)
+project(Minigin)
+
+if(EMSCRIPTEN)
+  message("Using Emscripten!")
+endif()
+
+if(EMSCRIPTEN)
+  set(TARGET_NAME minigin_web)
+  set(TARGET_PARAM )
+else()
+  set(TARGET_NAME minigin)
+  set(TARGET_PARAM WIN32)
+endif()
+
+# list source files here
+add_executable(${TARGET_NAME} ${TARGET_PARAM}
+  Minigin/Font.cpp
+  Minigin/Font.h
+  Minigin/GameObject.cpp
+  Minigin/GameObject.h
+  Minigin/InputManager.cpp
+  Minigin/InputManager.h
+  Minigin/Main.cpp
+  Minigin/Minigin.cpp
+  Minigin/Minigin.h
+  Minigin/Renderer.cpp
+  Minigin/Renderer.h
+  Minigin/ResourceManager.cpp
+  Minigin/ResourceManager.h
+  Minigin/Scene.cpp
+  Minigin/Scene.h
+  Minigin/SceneManager.cpp
+  Minigin/SceneManager.h
+  Minigin/TextObject.cpp
+  Minigin/TextObject.h
+  Minigin/Texture2D.cpp
+  Minigin/Texture2D.h
+  Minigin/Transform.cpp
+  Minigin/Transform.h
+)
+
+# enable c++20 features
+target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
+# set minigin as the default startup project
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
+
+include(FetchContent)
+# add glm
+FetchContent_Declare(
+  glm
+  URL https://github.com/g-truc/glm/releases/download/1.0.3/glm-1.0.3.zip
+  DOWNLOAD_NO_PROGRESS ON
+  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
+)
+
+FetchContent_GetProperties(glm)
+if(NOT glm_POPULATED)
+  FetchContent_MakeAvailable(glm)
+endif()
+
+if (WIN32)
+  # Add SDL3
+  FetchContent_Declare(
+    SDL3
+    URL https://www.libsdl.org/release/SDL3-devel-3.4.0-VC.zip 
+    DOWNLOAD_NO_PROGRESS ON
+    DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads 
+  )
+  FetchContent_GetProperties(SDL3)
+  if(NOT SDL3_POPULATED)
+    FetchContent_MakeAvailable(SDL3)
+  endif()
+  list(PREPEND CMAKE_PREFIX_PATH "${sdl3_SOURCE_DIR}")
+  find_package(SDL3 CONFIG REQUIRED)
+
+  # Add SDL3_image
+  FetchContent_Declare(
+    SDL3_image
+    URL https://www.libsdl.org/projects/SDL_image/release/SDL3_image-devel-3.2.6-VC.zip 
+    DOWNLOAD_NO_PROGRESS ON
+    DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
+  )
+  FetchContent_GetProperties(SDL3_image)
+  if(NOT SDL3_image_POPULATED)
+    FetchContent_MakeAvailable(SDL3_image)
+  endif()
+  list(PREPEND CMAKE_PREFIX_PATH "${sdl3_image_SOURCE_DIR}")
+  find_package(SDL3_image CONFIG REQUIRED)
+
+  # Add SDL3_ttf
+   FetchContent_Declare(
+    SDL3_ttf
+    URL https://www.libsdl.org/projects/SDL_ttf/release/SDL3_ttf-devel-3.2.2-VC.zip
+    DOWNLOAD_NO_PROGRESS ON
+    DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
+  )
+  FetchContent_GetProperties(SDL3_ttf)
+  if(NOT SDL3_ttf_POPULATED)
+    FetchContent_MakeAvailable(SDL3_ttf)
+  endif()
+  list(PREPEND CMAKE_PREFIX_PATH "${sdl3_ttf_SOURCE_DIR}")
+  find_package(SDL3_ttf CONFIG REQUIRED)
+
+  # Add VLD (Visual Leak Detector) for memory leak detection on Windows
+  find_package(VLD CONFIG)
+else()
+  FetchContent_Declare(
+    SDL3
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+    GIT_TAG release-3.4.0
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+  )
+  FetchContent_MakeAvailable(SDL3)
+  
+  FetchContent_Declare(
+    SDL3_image
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+    GIT_TAG release-3.2.6
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+  )
+  set(SDL3IMAGE_INSTALL OFF)
+  FetchContent_MakeAvailable(SDL3_image)
+
+  FetchContent_Declare(
+    SDL3_ttf
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
+    GIT_TAG release-3.2.2
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+  )
+  set(SDL3TTF_INSTALL OFF)
+  if(EMSCRIPTEN)
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/emscripten")
+    set(SDL3TTF_USE_SYSTEM_FREETYPE ON)
+    set(SDL3TTF_VENDORED OFF)
+    set(SDLTTF_PLUTOSVG OFF)
+    add_compile_options(-sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1)
+    add_link_options(-sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1)
+  endif()
+  FetchContent_MakeAvailable(SDL3_ttf)
+endif()
+
+
+target_include_directories("${TARGET_NAME}" PUBLIC 
+  ${CMAKE_SOURCE_DIR}/Minigin/
+  ${glm_SOURCE_DIR}
+  ${sdl3_SOURCE_DIR}/include
+  ${sdl3_image_SOURCE_DIR}/include
+  ${sdl3_ttf_SOURCE_DIR}/include
+  ${VLD_INCLUDE_DIR}
+)
+
+target_link_libraries("${TARGET_NAME}" PUBLIC 
+  SDL3::SDL3 
+  SDL3_image::SDL3_image 
+  SDL3_ttf::SDL3_ttf
+  ${VLD_LIBRARIES}
+)
+
+if(MSVC)
+  # compile at warning level 4 + treat warnings as errors
+  target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
+else()
+  target_compile_options(${TARGET_NAME} PRIVATE -Wall -Wextra -Werror)
+endif()
+
+if(EMSCRIPTEN)
+  set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -g")
+  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\"")
+
+  # work around https://github.com/emscripten-core/emscripten/issues/11513
+  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -fno-stack-protector")
+
+  # Use the Emscripten toolchain
+  set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/EmscriptenToolchain.cmake)
+
+  # Additional settings for Emscripten build
+  set_target_properties(${TARGET_NAME} PROPERTIES
+      COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"
+      LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS}"
+  )
+
+  # Have emscripten generate a html page too.
+  set(CMAKE_EXECUTABLE_SUFFIX ".html")
+  
+elseif(WIN32)
+  set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${TARGET_NAME}>")
+
+  # Copy SDL dlls to output folder
+  set(SDL_RUNTIME_DLLS
+    SDL3::SDL3
+    SDL3_image::SDL3_image
+    SDL3_ttf::SDL3_ttf
+  )
+
+  foreach(dllTarget IN LISTS SDL_RUNTIME_DLLS)
+    add_custom_command(
+      TARGET ${TARGET_NAME} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+          "$<TARGET_FILE:${dllTarget}>"
+          "$<TARGET_FILE_DIR:${TARGET_NAME}>"
+      VERBATIM
+    )
+  endforeach()
+
+  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Data"
+  )
+endif()

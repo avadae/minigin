@@ -1,5 +1,5 @@
-#pragma once
-#include <vec2.hpp>
+﻿#pragma once
+#include <glm/vec2.hpp>
 #include <string>
 
 struct SDL_Texture;

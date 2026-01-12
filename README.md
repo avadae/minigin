@@ -1,4 +1,4 @@
-# Minigin
+﻿# Minigin
 
 Minigin is a very small project using [SDL2](https://www.libsdl.org/) and [glm](https://github.com/g-truc/glm) for 2D c++ game projects. It is in no way a game engine, only a barebone start project where everything sdl related has been set up. It contains glm for vector math, to aleviate the need to write custom vector and matrix classes.
 
@@ -15,4 +15,39 @@ Minigin is, despite perhaps the suggestion in its name, **not** a game engine. I
 
 # Use
 
-Either download the latest release of this project and compile/run in visual studio or, since students need to have their work on github too, they can use this repository as a template (see the "Use this template" button at the top right corner). There is no point in forking this project.
+Get the source from this project, or since students need to have their work on github too, they can use this repository as a template.
+
+## Windows version
+
+- Install CMake 
+- Install CMake and CMake Tools extensions in Visual Code
+- Open the root folder in Visual Code, a "build" folder will be made by Code and the project can now be build.
+
+## Emscripten version
+
+- Install CMake 
+- Install Emscripten
+- Install Ninja
+- Install python
+
+In a terminal, navigate to the root folder. Run this: 
+
+    mkdir build_web
+    cd build_web
+    emcmake cmake ..
+    emmake ninja
+
+To be able to see the webpage you can simply start a python webserver in the build_web folder
+
+    python -m http.server
+
+Then simply browse to http://localhost:8000 and you're good to go.
+
+## Chocolatey
+
+For installing all of the above I recommend using [Chocolatey](https://chocolatey.org/). You can then simply run the following to install what is needed:
+
+    choco install -y cmake
+    choco install -y emscripten
+    choco install -y ninja
+    choco install -y python

@@ -1,6 +1,12 @@
-#include <stdexcept>
+﻿#include <stdexcept>
+#include <sstream>
+#include <iostream>
+
+#if WIN32
 #define WIN32_LEAN_AND_MEAN 
 #include <windows.h>
+#endif
+
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -12,41 +18,40 @@
 
 SDL_Window* g_window{};
 
-static void PrintSDLVersion()
+void LogSDLVersion(const std::string& message, int major, int minor, int patch)
 {
-	printf("Compiled with SDL %d.%d.%d\n",
-		SDL_MAJOR_VERSION,
-		SDL_MINOR_VERSION,
-		SDL_MICRO_VERSION);
+#if WIN32
+	std::stringstream ss;
+	ss << message << major << "." << minor << "." << patch << "\n";
+	OutputDebugString(ss.str().c_str());
+#else
+	std::cout << message << major << "." << minor << "." << patch << "\n";
+#endif
+}
 
+#ifdef __EMSCRIPTEN__
+#include "emscripten.h"
+
+void LoopCallback(void* arg)
+{
+	static_cast<dae::Minigin*>(arg)->RunOneFrame();
+}
+#endif
+
+// Why bother with this? Because sometimes students have a different SDL version installed on their pc.
+// That is not a problem unless for some reason the dll's from this project are not copied next to the exe.
+// These entries in the debug output help to identify that issue.
+void PrintSDLVersion()
+{
+	LogSDLVersion("Compiled with SDL", SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_MICRO_VERSION);
 	int version = SDL_GetVersion();
-	printf("Linked with SDL %d.%d.%d\n",
-		SDL_VERSIONNUM_MAJOR(version),
-		SDL_VERSIONNUM_MINOR(version),
-		SDL_VERSIONNUM_MICRO(version));
-
-	printf("Compiled with SDL_image %u.%u.%u\n",
-		SDL_IMAGE_MAJOR_VERSION,
-		SDL_IMAGE_MINOR_VERSION,
-		SDL_IMAGE_MICRO_VERSION);
-
+	LogSDLVersion("Linked with SDL ", SDL_VERSIONNUM_MAJOR(version), SDL_VERSIONNUM_MINOR(version), SDL_VERSIONNUM_MICRO(version));
+	LogSDLVersion("Compiled with SDL_image ",SDL_IMAGE_MAJOR_VERSION, SDL_IMAGE_MINOR_VERSION, SDL_IMAGE_MICRO_VERSION);
 	version = IMG_Version();
-	printf("Linked with SDL_image %d.%d.%d\n",
-		SDL_VERSIONNUM_MAJOR(version),
-		SDL_VERSIONNUM_MINOR(version),
-		SDL_VERSIONNUM_MICRO(version));
-
-	printf("Compiled with SDL_ttf %u.%u.%u\n",
-		SDL_TTF_MAJOR_VERSION,
-		SDL_TTF_MINOR_VERSION,
-		SDL_TTF_MICRO_VERSION);
-
+	LogSDLVersion("Linked with SDL_image ", SDL_VERSIONNUM_MAJOR(version), SDL_VERSIONNUM_MINOR(version), SDL_VERSIONNUM_MICRO(version));
+	LogSDLVersion("Compiled with SDL_ttf ",	SDL_TTF_MAJOR_VERSION, SDL_TTF_MINOR_VERSION,SDL_TTF_MICRO_VERSION);
 	version = TTF_Version();
-	printf("Linked with SDL_ttf %d.%d.%d\n",
-		SDL_VERSIONNUM_MAJOR(version),
-		SDL_VERSIONNUM_MINOR(version),
-		SDL_VERSIONNUM_MICRO(version));
-
+	LogSDLVersion("Linked with SDL_ttf ", SDL_VERSIONNUM_MAJOR(version), SDL_VERSIONNUM_MINOR(version),	SDL_VERSIONNUM_MICRO(version));
 }
 
 dae::Minigin::Minigin(const std::filesystem::path& dataPath)
@@ -85,17 +90,17 @@ dae::Minigin::~Minigin()
 void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
+#ifndef __EMSCRIPTEN__
+	while (!m_quit)
+		RunOneFrame();
+#else
+	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
+#endif
+}
 
-	auto& renderer = Renderer::GetInstance();
-	auto& sceneManager = SceneManager::GetInstance();
-	auto& input = InputManager::GetInstance();
-
-	// todo: this update loop could use some work.
-	bool doContinue = true;
-	while (doContinue)
-	{
-		doContinue = input.ProcessInput();
-		sceneManager.Update();
-		renderer.Render();
-	}
+void dae::Minigin::RunOneFrame()
+{
+	m_quit = !InputManager::GetInstance().ProcessInput();
+	SceneManager::GetInstance().Update();
+	Renderer::GetInstance().Render();
 }

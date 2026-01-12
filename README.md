@@ -44,22 +44,22 @@ In a terminal, navigate to the root folder. Run this:
     emcmake cmake ..
     emmake ninja
 
-To be able to see the webpage you can simply start a python webserver in the build_web folder
+To be able to see the webpage you can start a python webserver in the build_web folder
 
     python -m http.server
 
-Then simply browse to http://localhost:8000 and you're good to go.
+Then browse to http://localhost:8000 and you're good to go.
 
 ## Github Actions
 
 This project is build with github actions.
-- The CMake workflow simply builds the project in Debug and Release for Windows and serves as a check that the project builds on that platform.
+- The CMake workflow builds the project in Debug and Release for Windows and serves as a check that the project builds on that platform.
 - The Emscripten workflow generates a web version of the project and publishes it as a [github page](https://avadae.github.io/minigin/). 
   - The url of that page will be `https://<username>.github.io/<repository>/`
 
 ## Chocolatey
 
-For installing all of the above on Windows I recommend using [Chocolatey](https://chocolatey.org/). You can then simply run the following to install what is needed:
+For installing all of the above on Windows I recommend using [Chocolatey](https://chocolatey.org/). You can then run the following to install what is needed:
 
     choco install -y cmake
     choco install -y emscripten

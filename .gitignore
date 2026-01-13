@@ -403,3 +403,6 @@ build_web
 
 # Dear Imgui settings file
 imgui.ini
+
+# ignore steam sdk, should only exist on local device and not be submitted on github
+steamworks_sdk_*/

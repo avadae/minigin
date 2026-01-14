@@ -31,8 +31,6 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
-# set minigin as the default startup project
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
 
 include(FetchContent)
 # add glm
@@ -42,11 +40,7 @@ FetchContent_Declare(
   DOWNLOAD_NO_PROGRESS ON
   DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
 )
-
-FetchContent_GetProperties(glm)
-if(NOT glm_POPULATED)
-  FetchContent_MakeAvailable(glm)
-endif()
+FetchContent_MakeAvailable(glm)
 
 if (WIN32)
   # Add SDL3
@@ -56,10 +50,7 @@ if (WIN32)
     DOWNLOAD_NO_PROGRESS ON
     DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads 
   )
-  FetchContent_GetProperties(SDL3)
-  if(NOT SDL3_POPULATED)
-    FetchContent_MakeAvailable(SDL3)
-  endif()
+  FetchContent_MakeAvailable(SDL3)
   list(PREPEND CMAKE_PREFIX_PATH "${sdl3_SOURCE_DIR}")
   find_package(SDL3 CONFIG REQUIRED)
 
@@ -70,10 +61,7 @@ if (WIN32)
     DOWNLOAD_NO_PROGRESS ON
     DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
   )
-  FetchContent_GetProperties(SDL3_image)
-  if(NOT SDL3_image_POPULATED)
-    FetchContent_MakeAvailable(SDL3_image)
-  endif()
+  FetchContent_MakeAvailable(SDL3_image)
   list(PREPEND CMAKE_PREFIX_PATH "${sdl3_image_SOURCE_DIR}")
   find_package(SDL3_image CONFIG REQUIRED)
 
@@ -84,10 +72,7 @@ if (WIN32)
     DOWNLOAD_NO_PROGRESS ON
     DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
   )
-  FetchContent_GetProperties(SDL3_ttf)
-  if(NOT SDL3_ttf_POPULATED)
-    FetchContent_MakeAvailable(SDL3_ttf)
-  endif()
+  FetchContent_MakeAvailable(SDL3_ttf)
   list(PREPEND CMAKE_PREFIX_PATH "${sdl3_ttf_SOURCE_DIR}")
   find_package(SDL3_ttf CONFIG REQUIRED)
 
@@ -163,9 +148,6 @@ if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -g")
   set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\"")
 
-  # work around https://github.com/emscripten-core/emscripten/issues/11513
-  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -fno-stack-protector")
-
   # Use the Emscripten toolchain
   set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/EmscriptenToolchain.cmake)
 
@@ -179,6 +161,9 @@ if(EMSCRIPTEN)
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
   
 elseif(WIN32)
+  # Set minigin as the default startup project
+  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
+  # Set working directory to output folder
   set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${TARGET_NAME}>")
 
   # Copy SDL dlls to output folder

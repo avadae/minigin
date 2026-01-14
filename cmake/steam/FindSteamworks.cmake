@@ -70,6 +70,14 @@ if(STEAMWORKS_ROOT AND EXISTS "${STEAMWORKS_ROOT}")
         set(_STEAMWORKS_RUNTIME_DLL
             "${_STEAMWORKS_LIB_DIR}/win64/steam_api64.dll"
         )
+    elseif(APPLE)
+        set(_STEAMWORKS_LIBRARY
+            "${_STEAMWORKS_LIB_DIR}/osx/libsteam_api.dylib"
+        )
+    elseif(UNIX)
+        set(_STEAMWORKS_LIBRARY
+            "${_STEAMWORKS_LIB_DIR}/linux64/libsteam_api.so"
+        )
     endif()
 endif()
 
@@ -103,7 +111,10 @@ find_package_handle_standard_args(Steamworks
 if(Steamworks_FOUND)
     set(Steamworks_INCLUDE_DIRS "${_STEAMWORKS_INCLUDE_DIR}")
     set(Steamworks_LIBRARIES "${_STEAMWORKS_LIBRARY}")
-    set(Steamworks_RUNTIME_DLL "${_STEAMWORKS_RUNTIME_DLL}")
+
+    if(WIN32)
+        set(Steamworks_RUNTIME_DLL "${_STEAMWORKS_RUNTIME_DLL}")
+    endif()
 
     if(NOT TARGET Steamworks::Steamworks)
         add_library(Steamworks::Steamworks INTERFACE IMPORTED)

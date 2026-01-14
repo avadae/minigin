@@ -38,12 +38,21 @@ Or
 - Install Ninja
 - Install python
 
-In a terminal, navigate to the root folder. Run this: 
+In a terminal on Windows, navigate to the root folder. Run this: 
 
     mkdir build_web
     cd build_web
     emcmake cmake ..
     emmake ninja
+
+In a terminal on Mac, navigate to the root folder. Run this: 
+
+On OSX the third command needs an extra parameter:
+
+    mkdir build_web
+    cd build_web
+    emcmake cmake .. -DCMAKE_OSX_ARCHITECTURES=""
+    emmake make
 
 To be able to see the webpage you can start a python webserver in the build_web folder
 
@@ -66,3 +75,12 @@ For installing all of the above on Windows I recommend using [Chocolatey](https:
     choco install -y emscripten
     choco install -y ninja
     choco install -y python
+
+## Brew
+
+On Mac you can use homebrew
+
+    brew install cmake
+    brew install emscripten
+    brew install ninja
+    brew install python

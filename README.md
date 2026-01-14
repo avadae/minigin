@@ -33,21 +33,37 @@ Or
 
 ## Emscripten (web) version
 
-- Install CMake 
-- Install Emscripten
-- Install Ninja
-- Install python
+### On windows
 
-In a terminal on Windows, navigate to the root folder. Run this: 
+For installing all of the needed tools on Windows I recommend using [Chocolatey](https://chocolatey.org/). You can then run the following in a terminal to install what is needed:
+
+    choco install -y cmake
+    choco install -y emscripten
+    choco install -y ninja
+    choco install -y python
+
+In a terminal, navigate to the root folder. Run this: 
 
     mkdir build_web
     cd build_web
     emcmake cmake ..
     emmake ninja
 
-In a terminal on Mac, navigate to the root folder. Run this: 
+To be able to see the webpage you can start a python webserver in the build_web folder
 
-On OSX the third command needs an extra parameter:
+    python -m http.server
+
+Then browse to http://localhost:8000 and you're good to go.
+
+### On OSX
+
+On Mac you can use homebrew
+
+    brew install cmake
+    brew install emscripten
+    brew install python
+
+In a terminal on OSX, navigate to the root folder. Run this: 
 
     mkdir build_web
     cd build_web
@@ -56,7 +72,7 @@ On OSX the third command needs an extra parameter:
 
 To be able to see the webpage you can start a python webserver in the build_web folder
 
-    python -m http.server
+    python3 -m http.server
 
 Then browse to http://localhost:8000 and you're good to go.
 
@@ -67,20 +83,3 @@ This project is build with github actions.
 - The Emscripten workflow generates a web version of the project and publishes it as a [github page](https://avadae.github.io/minigin/). 
   - The url of that page will be `https://<username>.github.io/<repository>/`
 
-## Chocolatey
-
-For installing all of the above on Windows I recommend using [Chocolatey](https://chocolatey.org/). You can then run the following to install what is needed:
-
-    choco install -y cmake
-    choco install -y emscripten
-    choco install -y ninja
-    choco install -y python
-
-## Brew
-
-On Mac you can use homebrew
-
-    brew install cmake
-    brew install emscripten
-    brew install ninja
-    brew install python

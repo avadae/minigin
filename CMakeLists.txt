@@ -54,17 +54,6 @@ if (WIN32)
   list(PREPEND CMAKE_PREFIX_PATH "${sdl3_SOURCE_DIR}")
   find_package(SDL3 CONFIG REQUIRED)
 
-  # Add SDL3_image
-  FetchContent_Declare(
-    SDL3_image
-    URL https://www.libsdl.org/projects/SDL_image/release/SDL3_image-devel-3.2.6-VC.zip 
-    DOWNLOAD_NO_PROGRESS ON
-    DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
-  )
-  FetchContent_MakeAvailable(SDL3_image)
-  list(PREPEND CMAKE_PREFIX_PATH "${sdl3_image_SOURCE_DIR}")
-  find_package(SDL3_image CONFIG REQUIRED)
-
   # Add SDL3_ttf
    FetchContent_Declare(
     SDL3_ttf
@@ -93,16 +82,6 @@ else()
   FetchContent_MakeAvailable(SDL3)
   
   FetchContent_Declare(
-    SDL3_image
-    GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
-    GIT_TAG release-3.2.6
-    GIT_SHALLOW TRUE
-    GIT_PROGRESS TRUE
-  )
-  set(SDL3IMAGE_INSTALL OFF)
-  FetchContent_MakeAvailable(SDL3_image)
-
-  FetchContent_Declare(
     SDL3_ttf
     GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
     GIT_TAG release-3.2.2
@@ -125,14 +104,12 @@ target_include_directories("${TARGET_NAME}" PUBLIC
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${glm_SOURCE_DIR}
   ${sdl3_SOURCE_DIR}/include
-  ${sdl3_image_SOURCE_DIR}/include
   ${sdl3_ttf_SOURCE_DIR}/include
   ${VLD_INCLUDE_DIR}
 )
 
 target_link_libraries("${TARGET_NAME}" PUBLIC 
   SDL3::SDL3 
-  SDL3_image::SDL3_image 
   SDL3_ttf::SDL3_ttf
   ${VLD_LIBRARIES}
 )
@@ -157,6 +134,10 @@ if(EMSCRIPTEN)
       LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS}"
   )
 
+  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/web" "$<TARGET_FILE_DIR:${TARGET_NAME}>/"
+  )
+
   # Have emscripten generate a html page too.
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
   
@@ -169,7 +150,6 @@ elseif(WIN32)
   # Copy SDL dlls to output folder
   set(SDL_RUNTIME_DLLS
     SDL3::SDL3
-    SDL3_image::SDL3_image
     SDL3_ttf::SDL3_ttf
   )
 

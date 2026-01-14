@@ -1,5 +1,4 @@
 ﻿#include <stdexcept>
-#include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include "ResourceManager.h"
 #include "Renderer.h"

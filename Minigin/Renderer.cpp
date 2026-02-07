@@ -12,15 +12,12 @@ void dae::Renderer::Init(SDL_Window* window)
 	SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
 
 #if defined(__EMSCRIPTEN__)
-	m_renderer = SDL_CreateRenderer(window, "opengles2");
+	m_renderer = SDL_CreateRenderer(window, nullptr);
 #else
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, 1);
-	m_renderer = SDL_CreateRenderer(window, "opengl");
+	m_renderer = SDL_CreateRenderer(window, nullptr);
 #endif
 
-	if (m_renderer == nullptr) 
+	if (m_renderer == nullptr)
 	{
 		std::cout << "Failed to create the renderer: " << SDL_GetError() << "\n";
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
@@ -34,9 +31,8 @@ void dae::Renderer::Render() const
 	SDL_RenderClear(m_renderer);
 
 	SceneManager::GetInstance().Render();
-	
-	SDL_FlushRenderer(m_renderer);
-	SDL_GL_SwapWindow(m_window);
+
+	SDL_RenderPresent(m_renderer);
 }
 
 void dae::Renderer::Destroy()

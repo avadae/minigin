@@ -1,3 +1,4 @@
+#define SDL_MAIN_USE_CALLBACKS
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
@@ -34,7 +35,8 @@ static void load()
 	scene.Add(std::move(to));
 }
 
-int main(int, char*[]) {
+SDL_AppResult SDL_AppInit(void** const appstate, int const, char** const)
+{
 #if __EMSCRIPTEN__
 	fs::path data_location = "";
 #else
@@ -42,7 +44,27 @@ int main(int, char*[]) {
 	if(!fs::exists(data_location))
 		data_location = "../Data/";
 #endif
-	dae::Minigin engine(data_location);
-	engine.Run(load);
-    return 0;
+
+	*appstate = new dae::Minigin(data_location);
+	load();
+	return SDL_APP_CONTINUE;
+}
+
+SDL_AppResult SDL_AppIterate(void* const appstate)
+{
+	static_cast<dae::Minigin*>(appstate)->RunOneFrame();
+	return SDL_APP_CONTINUE;
+}
+
+SDL_AppResult SDL_AppEvent(void* const appstate, SDL_Event* const event)
+{
+	return
+		static_cast<dae::Minigin*>(appstate)->ProcessEvent(*event)
+			? SDL_APP_CONTINUE
+			: SDL_APP_SUCCESS;
+}
+
+void SDL_AppQuit(void* const appstate, SDL_AppResult const)
+{
+	delete static_cast<dae::Minigin*>(appstate);
 }

@@ -29,15 +29,6 @@ void LogSDLVersion(const std::string& message, int major, int minor, int patch)
 #endif
 }
 
-#ifdef __EMSCRIPTEN__
-#include "emscripten.h"
-
-void LoopCallback(void* arg)
-{
-	static_cast<dae::Minigin*>(arg)->RunOneFrame();
-}
-#endif
-
 // Why bother with this? Because sometimes students have a different SDL version installed on their pc.
 // That is not a problem unless for some reason the dll's from this project are not copied next to the exe.
 // These entries in the debug output help to identify that issue.
@@ -87,20 +78,13 @@ dae::Minigin::~Minigin()
 	SDL_Quit();
 }
 
-void dae::Minigin::Run(const std::function<void()>& load)
-{
-	load();
-#ifndef __EMSCRIPTEN__
-	while (!m_quit)
-		RunOneFrame();
-#else
-	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
-#endif
-}
-
 void dae::Minigin::RunOneFrame()
 {
-	m_quit = !InputManager::GetInstance().ProcessInput();
 	SceneManager::GetInstance().Update();
 	Renderer::GetInstance().Render();
+}
+
+bool dae::Minigin::ProcessEvent(SDL_Event& event)
+{
+	return InputManager::GetInstance().ProcessInput(event);
 }

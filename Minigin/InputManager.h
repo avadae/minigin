@@ -6,7 +6,7 @@ namespace dae
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
-		bool ProcessInput();
+		bool ProcessInput(SDL_Event& event);
 	};
 
 }

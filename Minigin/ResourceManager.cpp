@@ -17,6 +17,13 @@ void dae::ResourceManager::Init(const std::filesystem::path& dataPath)
 	}
 }
 
+void dae::ResourceManager::Destroy()
+{
+	m_loadedFonts.clear();
+	m_loadedTextures.clear();
+	TTF_Quit();
+}
+
 std::shared_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::string& file)
 {
 	const auto fullPath = m_dataPath/file;
@@ -38,19 +45,10 @@ std::shared_ptr<dae::Font> dae::ResourceManager::LoadFont(const std::string& fil
 
 void dae::ResourceManager::UnloadUnusedResources()
 {
-	for (auto it = m_loadedTextures.begin(); it != m_loadedTextures.end();)
-	{
-		if (it->second.use_count() == 1)
-			it = m_loadedTextures.erase(it);
-		else
-			++it;
-	}
-
-	for (auto it = m_loadedFonts.begin(); it != m_loadedFonts.end();)
-	{
-		if (it->second.use_count() == 1)
-			it = m_loadedFonts.erase(it);
-		else
-			++it;
-	}
+	std::erase_if(m_loadedTextures, [](const auto& item) {
+	    return item.second.use_count() == 1;
+	});
+	std::erase_if(m_loadedFonts, [](const auto& item) {
+	    return item.second.use_count() == 1;
+	});
 }

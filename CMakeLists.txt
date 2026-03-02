@@ -66,7 +66,6 @@ if(NOT SDL3_FOUND)
       GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
       GIT_TAG release-3.4.0
       GIT_SHALLOW TRUE
-      GIT_PROGRESS TRUE
     )
     FetchContent_MakeAvailable(SDL3)
   endif()
@@ -91,7 +90,6 @@ if(NOT SDL3_ttf_FOUND)
       GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
       GIT_TAG release-3.2.2
       GIT_SHALLOW TRUE
-      GIT_PROGRESS TRUE
     )
     set(SDL3TTF_INSTALL OFF)
     if(EMSCRIPTEN)

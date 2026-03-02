@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 4.1)
+
 project(Minigin)
 
-if(EMSCRIPTEN)
-  message("Using Emscripten!")
+# detect presence of clang-scan-deps
+find_program(_clang_scan_deps_exe NAMES clang-scan-deps)
+if(NOT _clang_scan_deps_exe)
+  message(WARNING "clang-scan-deps not found, C++ module dependency scanning will be disabled")
+  set(CMAKE_CXX_SCAN_FOR_MODULES OFF CACHE BOOL "Disable C++ module scanning" FORCE)
 endif()
 
 if(EMSCRIPTEN)

@@ -8,15 +8,8 @@
 void dae::Renderer::Init(SDL_Window* window)
 {
 	m_window = window;
-
 	SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
-
-#if defined(__EMSCRIPTEN__)
 	m_renderer = SDL_CreateRenderer(window, nullptr);
-#else
-	m_renderer = SDL_CreateRenderer(window, nullptr);
-#endif
-
 	if (m_renderer == nullptr)
 	{
 		std::cout << "Failed to create the renderer: " << SDL_GetError() << "\n";

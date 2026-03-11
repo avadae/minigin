@@ -11,12 +11,12 @@ namespace dae
 	class Texture2D final
 	{
 	public:
-		SDL_Texture* GetSDLTexture() const;
+		[[nodiscard]] SDL_Texture* GetSDLTexture() const;
 		explicit Texture2D(SDL_Texture* texture);
 		explicit Texture2D(const std::string& fullPath);
 		~Texture2D();
 
-		glm::vec2 GetSize() const;
+		[[nodiscard]] glm::vec2 GetSize() const;
 
 		Texture2D(const Texture2D &) = delete;
 		Texture2D(Texture2D &&) = delete;

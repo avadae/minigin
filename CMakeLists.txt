@@ -1,8 +1,10 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 4.1)
+
 project(Minigin)
 
-if(EMSCRIPTEN)
-  message("Using Emscripten!")
+if(CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS MATCHES "NOTFOUND")
+  message(WARNING "clang-scan-deps not found, C++ module dependency scanning will be disabled")
+  set(CMAKE_CXX_SCAN_FOR_MODULES OFF CACHE BOOL "Disable C++ module scanning" FORCE)
 endif()
 
 if(EMSCRIPTEN)
@@ -64,7 +66,6 @@ if(NOT SDL3_FOUND)
       GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
       GIT_TAG release-3.4.0
       GIT_SHALLOW TRUE
-      GIT_PROGRESS TRUE
     )
     FetchContent_MakeAvailable(SDL3)
   endif()
@@ -89,7 +90,6 @@ if(NOT SDL3_ttf_FOUND)
       GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
       GIT_TAG release-3.2.2
       GIT_SHALLOW TRUE
-      GIT_PROGRESS TRUE
     )
     set(SDL3TTF_INSTALL OFF)
     if(EMSCRIPTEN)
@@ -113,12 +113,12 @@ endif()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/steam")
 find_package(Steamworks QUIET)
 
-target_include_directories("${TARGET_NAME}" PUBLIC 
+target_include_directories("${TARGET_NAME}" PUBLIC
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${VLD_INCLUDE_DIR}
 )
 
-target_link_libraries("${TARGET_NAME}" PUBLIC 
+target_link_libraries("${TARGET_NAME}" PUBLIC
   SDL3::SDL3
   SDL3_ttf::SDL3_ttf
   glm::glm
@@ -151,7 +151,7 @@ if(EMSCRIPTEN)
 
   # Have emscripten generate a html page too.
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
-  
+
 elseif(WIN32)
   # Set minigin as the default startup project
   set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})

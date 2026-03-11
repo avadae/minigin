@@ -38,6 +38,8 @@ jobs:
           emcc --version
           cmake --version
 
+      - uses: lukka/get-cmake@latest
+
       - name: Configure (CMake)
         run: |
           mkdir -p build-web

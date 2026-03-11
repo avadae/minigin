@@ -13,8 +13,9 @@ namespace dae
 	{
 	public:
 		void Init(const std::filesystem::path& data);
-		std::shared_ptr<Texture2D> LoadTexture(const std::string& file);
-		std::shared_ptr<Font> LoadFont(const std::string& file, uint8_t size);
+		void Destroy();
+		[[nodiscard]] std::shared_ptr<Texture2D> LoadTexture(const std::string& file);
+		[[nodiscard]] std::shared_ptr<Font> LoadFont(const std::string& file, uint8_t size);
 	private:
 		std::filesystem::path m_dataPath;
 		std::map<std::string, std::shared_ptr<Texture2D>> m_loadedTextures;

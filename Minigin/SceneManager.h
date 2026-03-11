@@ -12,12 +12,12 @@ namespace dae
 	{
 	public:
 		Scene& CreateScene();
-
 		void Update();
 		void Render();
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
+		virtual ~SceneManager() = default;
 		std::vector<std::unique_ptr<Scene>> m_scenes{};
 	};
 }

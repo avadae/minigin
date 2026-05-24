@@ -52,3 +52,8 @@ void dae::ResourceManager::UnloadUnusedResources()
 	    return item.second.use_count() == 1;
 	});
 }
+
+std::filesystem::path dae::ResourceManager::ToFullPath(const std::filesystem::path& file)
+{
+	return GetInstance().m_dataPath / file;
+}
